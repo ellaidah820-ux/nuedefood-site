@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Nuede Meal Plan</title>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ==========================================
+           CHECKOUT PAGE STYLES
+           ========================================== */
+        
+        :root {
+            --brand-green: #16a34a;
+            --brand-dark: #15803d;
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --bg-light: #f9fafb;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            color: var(--text-dark);
+        }
+
+        /* Navbar - Matching Main Site */
+        .navbar {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Nav becomes solid when scrolling */
+nav.scrolled {
+    background: rgba(249, 247, 242, 0.98);
+    box-shadow: 0 4px 30px rgba(9, 110, 33, 0.1);
+}
+
+
+        .logo {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
+    background: transparent !important;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            margin-left: 1.5rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--brand-green);
+        }
+
+        /* Container */
+        .checkout-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        h1 {
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        /* Meal Plan Badge */
+        .meal-plan-badge {
+            background: #f0fdf4;
+            border: 2px solid var(--brand-green);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .meal-plan-badge i {
+            color: var(--brand-green);
+            font-size: 1.5rem;
+        }
+
+        .meal-plan-badge span {
+            font-weight: 600;
+            color: var(--brand-green);
+            font-size: 1.1rem;
+        }
+
+        /* Cards */
+        .checkout-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        h2 i {
+            color: var(--brand-green);
+        }
+
+        /* Order Summary Items */
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: var(--text-gray);
+        }
+
+        .summary-value {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Nutrition Grid */
+        .nutrition-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .nutrition-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+        }
+
+        .nutrition-label {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            margin-bottom: 0.25rem;
+        }
+
+        .nutrition-value {
+            font-weight: bold;
+            color: var(--brand-green);
+            font-size: 1.1rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        .form-group label .optional {
+            font-weight: normal;
+            color: var(--text-gray);
+            font-size: 0.85rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--brand-green);
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* WhatsApp Button */
+        .whatsapp-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .whatsapp-btn:hover {
+            background: #128C7E;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+
+        .whatsapp-btn i {
+            font-size: 1.3rem;
+        }
+
+        /* Security Note */
+        .security-note {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nutrition-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .checkout-container {
+                margin: 1rem auto;
+            }
+        }
+
+        /* Payment Info Card */
+.payment-info-card {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 2px solid #16a34a;
+}
+
+.payment-box {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.payment-amount {
+    text-align: center;
+    padding: 1rem;
+    background: #16a34a;
+    color: white;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.amount-label {
+    display: block;
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: 0.3rem;
+}
+
+.amount-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.bank-details {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.bank-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.bank-row:last-child {
+    border-bottom: none;
+}
+
+.bank-label {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.bank-value {
+    color: #1f2937;
+    font-size: 0.95rem;
+}
+
+.copy-btn {
+    background: #16a34a;
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.5rem;
+    transition: all 0.3s;
+}
+
+.copy-btn:hover {
+    background: #15803d;
+    transform: scale(1.05);
+}
+
+.payment-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: #6b7280;
+    padding: 0.75rem;
+    background: #fef3c7;
+    border-radius: 6px;
+    border-left: 4px solid #f59e0b;
+}
+
+.payment-note i {
+    color: #f59e0b;
+    margin-top: 0.1rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+    .amount-value {
+        font-size: 1.5rem;
+    }
+    
+    .bank-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3rem;
+    }
+    
+    .copy-btn {
+        align-self: flex-end;
+    }
+}
+    </style>
+</head>
+<body>
+
+    <!-- Navbar - Matching Main Site -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+                 <img src="https://i.ibb.co/v6PcsVRg/17970-removebg-preview.png" alt="Nuede Logo" style="height: 100px;">
+        </a>
+        <div class="nav-links">
+            <a href="index.html#about">About</a>
+            <a href="index.html#menu">Menu</a>
+            <a href="index.html#meal-planner-section">Meal Plan</a>
+            <a href="index.html#faq">FAQ</a>
+        </div>
+    </nav>
+
+    <div class="checkout-container">
+        <h1>Complete Your Order</h1>
+        
+        <!-- Meal Plan Badge -->
+        <div class="meal-plan-badge">
+            <i class="fas fa-calendar-check"></i>
+            <span id="badge-text">Loading Plan...</span>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="checkout-card">
+            <h2><i class="fas fa-shopping-bag"></i> Order Summary</h2>
+            
+            <div class="summary-item">
+                <span class="summary-label">Plan Type</span>
+                <span class="summary-value" id="checkout-plan-type">-</span>
+            </div>
+            
+            <div class="summary-item">
+                <span class="summary-label">Total Meals</span>
+                <span class="summary-value" id="checkout-total-meals">-</span>
+            </div>
+            
+            <div class="summary-item">
+                <span class="summary-label">Delivery Schedule</span>
+                <span class="summary-value" id="checkout-delivery">-</span>
+            </div>
+            
+            <div class="summary-item">
+                <span class="summary-label">Estimated Delivery</span>
+                <span class="summary-value" id="checkout-estimated-delivery" style="color: var(--brand-green);">
+                    <i class="fas fa-clock"></i> 30 mins
+                </span>
+            </div>
+
+            <!-- Nutritional Info -->
+            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px dashed #e5e7eb;">
+                <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: var(--text-gray);">Nutritional Overview</h3>
+                <div class="nutrition-grid">
+                    <div class="nutrition-item">
+                        <div class="nutrition-label">Calories</div>
+                        <div class="nutrition-value" id="checkout-calories">0</div>
+                    </div>
+                    <div class="nutrition-item">
+                        <div class="nutrition-label">Protein</div>
+                        <div class="nutrition-value" id="checkout-protein">0g</div>
+                    </div>
+                    <div class="nutrition-item">
+                        <div class="nutrition-label">Carbs</div>
+                        <div class="nutrition-value" id="checkout-carbs">0g</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Information -->
+<div class="checkout-card payment-info-card">
+    <h2><i class="fas fa-credit-card"></i> Payment Details</h2>
+    
+    <div class="payment-box">
+        <div class="payment-amount">
+            <span class="amount-label">Total Amount Due</span>
+            <span class="amount-value" id="total-amount">₦0</span>
+        </div>
+        
+        <div class="bank-details">
+            <div class="bank-row">
+                <span class="bank-label">Bank Name:</span>
+                <span class="bank-value"><strong>MONIEPOINT</strong></span>
+            </div>
+            <div class="bank-row">
+                <span class="bank-label">Account Number:</span>
+                <span class="bank-value"><strong id="account-number">7081030153</strong></span>
+                <button class="copy-btn" onclick="copyAccountNumber()">
+                    <i class="fas fa-copy"></i>
+                </button>
+            </div>
+            <div class="bank-row">
+                <span class="bank-label">Account Name:</span>
+                <span class="bank-value"><strong>Faith Nukoaka Taneh</strong></span>
+            </div>
+        </div>
+        
+        <div class="payment-note">
+            <i class="fas fa-info-circle"></i>
+            Please make payment before completing your order. You'll send proof of payment via WhatsApp.
+        </div>
+    </div>
+</div>
+
+
+        <!-- Delivery Information Form -->
+        <div class="checkout-card">
+            <h2><i class="fas fa-truck"></i> Delivery Information</h2>
+            
+            <form id="delivery-form">
+                <div class="form-group">
+                    <label>Full Name <span style="color: #ef4444;">*</span></label>
+                    <input type="text" id="customer-name" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Phone Number <span style="color: #ef4444;">*</span></label>
+                    <input type="tel" id="customer-phone" placeholder="e.g., +2348116291761" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Delivery Address <span style="color: #ef4444;">*</span></label>
+                    <textarea id="customer-address" placeholder="Enter your complete delivery address" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Nearby Landmark <span class="optional">(Optional)</span></label>
+                    <input type="text" id="customer-landmark" placeholder="e.g., Opposite Zenith Bank, Next to Shoprite">
+                </div>
+
+                <button type="submit" class="whatsapp-btn">
+                    <i class="fab fa-whatsapp"></i>
+                    Send Order via WhatsApp
+                </button>
+                
+                <div class="security-note">
+                    <i class="fas fa-lock"></i>
+                    Your order will be sent securely via WhatsApp
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- CHECKOUT LOGIC ---
+
+// 1. Load meal plan data from localStorage
+const mealPlanData = JSON.parse(localStorage.getItem('nuede_meal_plan_checkout')) || 
+                     JSON.parse(localStorage.getItem('nuede_meal_plan'));
+
+console.log("📦 Loaded Meal Plan Data:", mealPlanData);
+console.log("🍽️ Meals Object:", mealPlanData?.plan || mealPlanData?.meals);
+
+if (!mealPlanData || (!mealPlanData.plan && !mealPlanData.meals)) {
+    alert("No meal plan found. Please create a plan first.");
+    window.location.href = 'index.html';
+}
+
+// Use whichever key exists
+const meals = mealPlanData.plan || mealPlanData.meals || {};
+console.log("🔑 Available meal keys:", Object.keys(meals));
+
+// === POPULATE ORDER SUMMARY & CALCULATE DELIVERY ===
+if (mealPlanData) {
+    // 1. Get actual days (fallback to counting unique days in plan if missing)
+    let planDays = mealPlanData.days;
+    
+    if (!planDays || planDays === 0) {
+        // Smart fallback: count unique days that have meals
+        const meals = mealPlanData.plan || mealPlanData.meals || {};
+        const uniqueDays = new Set();
+        
+        for (const key in meals) {
+            const match = key.match(/Day(\d+)|^(\d+)-/i);
+            if (match) uniqueDays.add(parseInt(match[1] || match[2]));
+        }
+        
+        planDays = uniqueDays.size > 0 ? uniqueDays.size : 7;
+    }
+
+    // 2. Update Plan Type Display
+    const planTypeEl = document.getElementById('checkout-plan-type');
+    if (planTypeEl) planTypeEl.textContent = `${planDays}-Day Meal Plan`;
+
+    // 3. Update Total Meals
+    const totalMealsEl = document.getElementById('checkout-total-meals');
+    if (totalMealsEl) {
+        const meals = mealPlanData.plan || mealPlanData.meals || {};
+        totalMealsEl.textContent = `${Object.keys(meals).length} meals`;
+    }
+
+    // 4. Update Delivery Schedule
+    const deliveryEl = document.getElementById('checkout-delivery');
+    if (deliveryEl) deliveryEl.textContent = mealPlanData.deliverySchedule || 'Monday & Thursday';
+
+    // 5. Update Estimated Delivery
+    const estimatedEl = document.getElementById('checkout-estimated-delivery');
+    if (estimatedEl) estimatedEl.textContent = mealPlanData.estimatedDelivery || '30 mins';
+
+    // 6. Calculate Nutrition
+    const meals = mealPlanData.plan || mealPlanData.meals || {};
+    let totalCal = 0, totalPro = 0, totalCarb = 0, totalFat = 0;
+    
+    for (const key in meals) {
+        const meal = meals[key];
+        totalCal += meal.cal || meal.calories || 0;
+        totalPro += meal.pro || meal.protein || 0;
+        totalCarb += meal.carb || meal.carbs || 0;
+        totalFat += meal.fat || 0;
+    }
+
+    const calEl = document.getElementById('checkout-calories');
+    const proEl = document.getElementById('checkout-protein');
+    const carbEl = document.getElementById('checkout-carbs');
+    const fatEl = document.getElementById('checkout-fat');
+
+    if (calEl) calEl.textContent = totalCal.toLocaleString();
+    if (proEl) proEl.textContent = `${totalPro}g`;
+    if (carbEl) carbEl.textContent = `${totalCarb}g`;
+    if (fatEl) fatEl.textContent = `${totalFat}g`;
+
+    // 7. CALCULATE & DISPLAY DELIVERY FEE IN ORDER SUMMARY
+    const deliveryFeePerDay = 4000;
+    const totalDeliveryFee = deliveryFeePerDay * planDays;
+
+    // Create delivery fee row if it doesn't exist
+    let deliveryFeeEl = document.getElementById('checkout-delivery-fee');
+    if (!deliveryFeeEl) {
+        const nutritionSection = document.querySelector('.nutritional-overview');
+        if (nutritionSection) {
+            const deliveryRow = document.createElement('div');
+            deliveryRow.style.cssText = 'display: flex; justify-content: space-between; padding: 0.75rem 0; border-top: 1px solid #e5e7eb; margin-top: 0.5rem;';
+            deliveryRow.innerHTML = `
+                <span style="color: #6b7280; font-weight: 500;">Delivery Fee (${planDays} days)</span>
+                <span id="checkout-delivery-fee" style="font-weight: 700; color: #16a34a;">₦${totalDeliveryFee.toLocaleString()}</span>
+            `;
+            nutritionSection.parentNode.insertBefore(deliveryRow, nutritionSection.nextSibling);
+        }
+    } else {
+        deliveryFeeEl.textContent = `₦${totalDeliveryFee.toLocaleString()}`;
+    }
+}
+
+
+        // 2. Handle Form Submission - Send to WhatsApp
+        document.getElementById('delivery-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('customer-name').value.trim();
+            const phone = document.getElementById('customer-phone').value.trim();
+            const address = document.getElementById('customer-address').value.trim();
+            const landmark = document.getElementById('customer-landmark').value.trim();
+            
+            // Company WhatsApp Number (CHANGE THIS TO YOUR ACTUAL NUMBER)
+            const companyPhone = '2348116291761'; // Format: Country code + number (no + or spaces)
+
+            console.log("📦 CHECKOUT DATA RECEIVED:", mealPlanData);
+
+
+
+// Build WhatsApp Message
+let message = `*NEW MEAL PLAN ORDER* 🎉\n\n`;
+
+message += `*CUSTOMER DETAILS:*\n`;
+message += `👤 Name: ${name}\n`;
+message += `📱 Phone: ${phone}\n`;
+message += `📍 Address: ${address}\n`;
+if (landmark) message += `🏛️ Landmark: ${landmark}\n`;
+
+message += `\n*ORDER DETAILS:*\n`;
+message += `📅 Plan: ${mealPlanData.days || 7}-Day Meal Plan\n`;
+message += `🍽️ Total Meals: ${mealPlanData.totalMeals || Object.keys(meals).length}\n`;
+message += `🚚 Delivery: ${mealPlanData.deliverySchedule || 'Monday & Thursday'}\n`;
+message += `⏱️ Est. Delivery: 30 mins\n`;
+
+// Calculate nutrition from actual meals
+let totalCal = 0, totalPro = 0, totalCarb = 0;
+for (const key in meals) {
+    const meal = meals[key];
+    totalCal += meal.cal || meal.calories || 0;
+    totalPro += meal.pro || meal.protein || 0;
+    totalCarb += meal.carb || meal.carbs || 0;
+}
+
+message += `\n*NUTRITIONAL INFO:*\n`;
+message += `🔥 Calories: ${totalCal.toLocaleString()} kcal\n`;
+message += `💪 Protein: ${totalPro}g\n`;
+message += `🌾 Carbs: ${totalCarb}g\n`;
+
+// === DISPLAY ALL MEALS ===
+message += `\n*📋 COMPLETE MEAL SCHEDULE:*\n`;
+message += `━━━━━━━━━━━━━━━━━━━━\n`;
+
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const times = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
+const numDays = mealPlanData.days || 7;
+
+for (let d = 1; d <= numDays; d++) {
+    const date = new Date();
+    date.setDate(date.getDate() + d - 1);
+    const dayName = days[date.getDay()];
+    const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    
+    message += `\n*${dayName} (${dateStr})*\n`;
+    
+    let dayHasMeals = false;
+    times.forEach(time => {
+        // Try different key formats
+        const meal = meals[`Day${d}-${time}`] || 
+                     meals[`Day-${d}-${time}`] || 
+                     meals[`${d}-${time}`];
+        
+        if (meal) {
+            dayHasMeals = true;
+            const emoji = time === 'Breakfast' ? '🌅' : time === 'Lunch' ? '☀️' : time === 'Dinner' ? '🌙' : '🍪';
+            message += `${emoji} *${time}:* ${meal.name}\n`;
+            message += `   ${meal.cal || meal.calories || 0} kcal | ${meal.pro || meal.protein || 0}g pro\n`;
+        }
+    });
+    
+    if (!dayHasMeals) {
+        message += `⚠️ No meals selected\n`;
+    }
+    message += `━━━━━━━━━━━━━━━━━━━━\n`;
+}
+// === NEW PRICE BREAKDOWN LOGIC ===
+let realTotal = 0;
+let mealPriceList = "";
+
+for (const key in meals) {
+    const meal = meals[key];
+    // Safely get price (checks for .price or .cost)
+    const price = (meal && (meal.price || meal.cost)) ? (meal.price || meal.cost) : 0;
+    
+    realTotal += price;
+    
+    if (meal && meal.name) {
+        mealPriceList += `• ${meal.name}: ₦${price.toLocaleString()}\n`;
+    }
+}
+
+message += `\n*💳 PAYMENT BREAKDOWN*\n`;
+if (realTotal > 0) {
+    message += `${mealPriceList}`;
+    message += `━━━━━━━━━━━━━━━━━━━━\n`;
+// === SMART DELIVERY FEE CALCULATION ===
+const deliveryFeePerDay = 4000;
+
+// Try to get days from saved data first
+let planDays = mealPlanData.days;
+
+// If days is missing, 0, or wrong, count actual days with meals
+if (!planDays || planDays === 0 || planDays > 7) {
+    const meals = mealPlanData.plan || mealPlanData.meals || {};
+    const uniqueDays = new Set();
+    
+    for (const key in meals) {
+        // Match patterns like "Day1-Breakfast", "1-Lunch", "Day2-Dinner", etc.
+        const match = key.match(/Day(\d+)|^(\d+)-/i);
+        if (match) {
+            uniqueDays.add(parseInt(match[1] || match[2]));
+        }
+    }
+    
+    // Use counted days, fallback to 7 only if truly empty
+    planDays = uniqueDays.size > 0 ? uniqueDays.size : 7;
+}
+
+const totalDeliveryFee = deliveryFeePerDay * planDays;
+message += `━━━━━━━━━━━━━━━━━━━━\n`;
+message += `🚚 *DELIVERY FEE (${planDays} Days):* ₦${totalDeliveryFee.toLocaleString()}\n`;
+message += `   (₦${deliveryFeePerDay.toLocaleString()} per day)\n`;
+
+// Update the grand total to include delivery
+const grandTotal = realTotal + totalDeliveryFee;
+
+
+    message += `*TOTAL AMOUNT DUE: ₦${grandTotal.toLocaleString()}*\n\n`;
+} else {
+    message += `⚠️ Prices not found. Please confirm amount via chat.\n\n`;
+}
+
+message += `Please make payment to:\n`;
+message += `Bank: MONIEPOINT\n`;
+message += `Account: 7081030153\n`;
+message += `Name: Faith Nukoaka Taneh\n\n`;
+message += `Send proof of payment after transfer.\n`;
+message += `─────────────────\n`;
+message += `Please confirm my order. Thank you! 🙏`;
+
+            
+            // Encode message for URL
+            const encodedMessage = encodeURIComponent(message);
+            
+            // Create WhatsApp URL
+            const whatsappURL = `https://wa.me/${companyPhone}?text=${encodedMessage}`;
+            
+            // Open WhatsApp
+            window.open(whatsappURL, '_blank');
+            
+            // Optional: Clear cart after sending
+            setTimeout(() => {
+                if (confirm('Order sent to WhatsApp! Would you like to clear your meal plan?')) {
+                    localStorage.removeItem('nuede_meal_plan');
+                    localStorage.removeItem('nuede_meal_plan_checkout');
+                    window.location.href = 'meal-plan.html';
+                }
+            }, 2000);
+        });
+
+        // Copy Account Number Function
+function copyAccountNumber() {
+    const accountNumber = document.getElementById('account-number').textContent;
+    navigator.clipboard.writeText(accountNumber).then(() => {
+        alert('Account number copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = accountNumber;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert('Account number copied to clipboard!');
+    });
+}
+
+
+function calculateTotalAmount() {
+    if (!mealPlanData) return;
+    
+    const deliveryFeePerDay = 4000;
+    const currentMeals = mealPlanData.plan || mealPlanData.meals || {};
+    
+    // 1. Calculate Meal Prices
+    let realTotal = 0;
+    for (const key in currentMeals) {
+        const meal = currentMeals[key];
+        const price = (meal && (meal.price || meal.cost)) ? (meal.price || meal.cost) : 0;
+        realTotal += price;
+    }
+    
+    // 2. SMART DELIVERY CALCULATION (Fixes the 7-day bug)
+    let planDays = mealPlanData.days;
+    
+    // If days is missing or wrong, count actual unique days with meals
+    if (!planDays || planDays === 0 || planDays > 7) {
+        const uniqueDays = new Set();
+        for (const key in currentMeals) {
+            const match = key.match(/Day(\d+)|^(\d+)-/i);
+            if (match) {
+                uniqueDays.add(parseInt(match[1] || match[2]));
+            }
+        }
+        planDays = uniqueDays.size > 0 ? uniqueDays.size : 7;
+    }
+    
+    const totalDeliveryFee = deliveryFeePerDay * planDays;
+    const grandTotal = realTotal + totalDeliveryFee;
+    
+    // 3. Update the Green Total Box
+    const totalElement = document.getElementById('total-amount');
+    if (totalElement) {
+        totalElement.textContent = `₦${grandTotal.toLocaleString()}`;
+    }
+}
+
+// Call on load
+calculateTotalAmount();
+    </script>
+</body>
+</html>
